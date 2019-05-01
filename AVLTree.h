@@ -9,7 +9,7 @@ public:
 
 	void Insert(int data);
 	Node* Search(int data);
-	//void InorderTraversal();
+	void InorderTraversal();
 	void PreOrderTraversal();
 	void Print();
 	int Size();
@@ -24,7 +24,7 @@ private:
 	void DestructorHelper(Node* cursor);
 	Node* InsertHelper(Node* cursor, int data);
 	Node* SearchHelper(Node* cursor, int data);
-	//void InorderHelper(Node* cursor);
+	void InorderHelper(Node* cursor);
 	void PreOrderTraversalHelper(Node* cursor);
 	void PrintHelper(Node* cursor, string offset);
 	int SizeHelper(Node* cursor);
