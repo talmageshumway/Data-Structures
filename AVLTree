@@ -48,7 +48,6 @@ Node * AVLTree::InsertHelper(Node * cursor, int data)//need to do if null stuff
 	}
 	cursor = Rebalance(cursor);
 	cursor->UpdateHeight();
-	//cursor = Rebalance(cursor);//?
 	return cursor;
 }
 
@@ -77,23 +76,23 @@ Node * AVLTree::SearchHelper(Node * cursor, int data)//need to do if null stuff
 	}
 }
 
-//prints out in numerical order. ill print myself out after my left, and then my right are printed out
-//void AVLTree::InorderTraversal()
-//{
-//	InorderHelper(root);
-//	cout << endl;
-//}
+prints out in numerical order. i'll print myself out after my left, and then my right are printed out
+void AVLTree::InorderTraversal()
+{
+	InorderHelper(root);
+	cout << endl;
+}
 
-//void AVLTree::InorderHelper(Node * cursor)
-//{
-//	if (cursor == nullptr)
-//	{
-//		return;
-//	}
-//	InorderHelper(cursor->left);
-//	cout << cursor->value << ", ";
-//	InorderHelper(cursor->right);
-//}
+void AVLTree::InorderHelper(Node * cursor)
+{
+	if (cursor == nullptr)
+	{
+		return;
+	}
+	InorderHelper(cursor->left);
+	cout << cursor->value << ", ";
+	InorderHelper(cursor->right);
+}
 
 void AVLTree::PreOrderTraversal()
 {
