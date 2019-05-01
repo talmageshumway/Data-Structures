@@ -1,0 +1,217 @@
+#include "AVLTree.h"
+#include <string>
+#include <algorithm>
+#include <iostream>
+using namespace std;
+
+
+AVLTree::AVLTree()
+{
+	root = nullptr;
+}
+
+AVLTree::~AVLTree()
+{
+	DestructorHelper(root);
+}
+
+void AVLTree::DestructorHelper(Node* cursor)
+{
+	if (cursor == nullptr)
+	{
+		return;
+	}
+	DestructorHelper(cursor->left);
+	DestructorHelper(cursor->right);
+	delete cursor;
+}
+
+void AVLTree::Insert(int data)
+{
+	root = InsertHelper(root, data);
+}
+
+Node * AVLTree::InsertHelper(Node * cursor, int data)//need to do if null stuff
+{
+	if (cursor == nullptr)
+	{
+		return new Node(data);
+	}
+
+	else if (data > cursor->value)
+	{
+		cursor->right = InsertHelper(cursor->right, data);
+	}
+	else //if (data <= cursor->data)
+	{
+		cursor->left = InsertHelper(cursor->left, data);
+	}
+	cursor = Rebalance(cursor);
+	cursor->UpdateHeight();
+	//cursor = Rebalance(cursor);//?
+	return cursor;
+}
+
+Node * AVLTree::Search(int data)
+{
+	return SearchHelper(root, data);
+}
+
+Node * AVLTree::SearchHelper(Node * cursor, int data)//need to do if null stuff
+{
+	if (cursor == nullptr)
+	{
+		return nullptr;
+	}
+	if (data == cursor->value)
+	{
+		return cursor;
+	}
+	else if (data > cursor->value)
+	{
+		return SearchHelper(cursor->right, data);
+	}
+	else //if (data <= cursor->data)
+	{
+		return SearchHelper(cursor->left, data);
+	}
+}
+
+//prints out in numerical order. ill print myself out after my left, and then my right are printed out
+//void AVLTree::InorderTraversal()
+//{
+//	InorderHelper(root);
+//	cout << endl;
+//}
+
+//void AVLTree::InorderHelper(Node * cursor)
+//{
+//	if (cursor == nullptr)
+//	{
+//		return;
+//	}
+//	InorderHelper(cursor->left);
+//	cout << cursor->value << ", ";
+//	InorderHelper(cursor->right);
+//}
+
+void AVLTree::PreOrderTraversal()
+{
+	PreOrderTraversalHelper(root);
+	cout << endl;
+}
+
+void AVLTree::PreOrderTraversalHelper(Node * cursor)
+{
+	if (cursor == nullptr)
+	{
+		return;
+	}
+	cout << cursor->value << ", ";
+	PreOrderTraversalHelper(cursor->left);
+	PreOrderTraversalHelper(cursor->right);
+}
+
+void AVLTree::Print()
+{
+	PrintHelper(root, "");
+	cout << endl << endl;
+}
+
+void AVLTree::PrintHelper(Node* cursor, string offset)
+{
+	if (cursor == nullptr)
+	{
+		cout << offset << "[Empty]" << endl;
+	}
+
+	else
+	{
+		cout << offset << cursor->value << " (" << cursor->height << ") ";
+		if (cursor->IsLeaf())
+		{
+			cout << "[leaf]" << endl;
+		}
+		else
+		{
+			cout << endl;
+			PrintHelper(cursor->left, offset + "   ");
+			PrintHelper(cursor->right, offset + "   ");
+		}
+
+	}
+}
+
+int AVLTree::Size()
+{
+	return SizeHelper(root);
+}
+
+int AVLTree::SizeHelper(Node * cursor)
+{
+	if (cursor == nullptr)
+	{
+		return 0;
+	}
+
+	return 1 + SizeHelper(cursor->left) + SizeHelper(cursor->right);
+
+}
+//
+Node* AVLTree::Rebalance(Node* cursor)
+{
+	if ((cursor->BalanceFactor(cursor) < 2) && (cursor->BalanceFactor(cursor) > -2))//
+	{
+		return cursor;
+	}
+	else
+	{
+		if (cursor->BalanceFactor(cursor) < 0)
+		{
+			if (cursor->right->BalanceFactor(cursor->right) < 0)//right right  //(cursor) to (cursor->right)!!!
+			{
+				cursor = RotateLeft(cursor);
+			}
+			else//right left
+			{
+				cursor->right = RotateRight(cursor->right);
+				cursor = RotateLeft(cursor);
+			}
+		}
+		else 
+		{
+			if (cursor->left->BalanceFactor(cursor->left) > 0)//left left // same!!!
+			{
+				cursor = RotateRight(cursor);
+			}
+			else//left right
+			{
+				cursor->left = RotateLeft(cursor->left);
+				cursor = RotateRight(cursor);
+			}
+		}
+		return cursor;
+	}
+}
+
+Node* AVLTree::RotateLeft(Node * cursor)
+{
+	Node* tmp1 = cursor->right;
+	Node* tmp2 = tmp1->left;
+	tmp1->left = cursor;
+	cursor->right = tmp2;
+	cursor->UpdateHeight();
+	tmp1->UpdateHeight();
+	return tmp1;
+}
+
+Node* AVLTree::RotateRight(Node * cursor)
+{
+	Node* tmp1 = cursor->left;
+	Node* tmp2 = tmp1->right;
+	tmp1->right = cursor;
+	cursor->left = tmp2;
+	cursor->UpdateHeight();
+	tmp1->UpdateHeight();
+	return tmp1;
+}
